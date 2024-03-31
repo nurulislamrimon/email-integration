@@ -1,7 +1,4 @@
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 const html = `
 <h1>Welcome to our website!</h1>
@@ -11,30 +8,33 @@ const html = `
 N I Brands</p>
 `;
 
-console.log(process.env.EMAIL_USER);
 async function sendMail(email) {
   try {
+    const testAccount = await nodemailer.createTestAccount();
     // Create a transporter for sending email
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      //   service: "gmail",
 
-      // host: "smtp.ethereal.email",
-      // port: 587,
-      // secure: false,
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: testAccount.user,
+        pass: testAccount.pass,
       },
     });
 
     const info = await transporter.sendMail({
-      from: '"N I Brands" <nurulislamrimon@gmail.com>',
+      from: '"N I Brands" <nirimonpc@gmail.com>',
       to: email,
       subject: "Welcome to our website!",
       html: html,
     });
 
-    console.log("Mail sended successfully:", info);
+    console.log(
+      "Mail sended successfully:",
+      nodemailer.getTestMessageUrl(info)
+    );
     console.log(info.accepted);
     console.log(info.rejected);
   } catch (err) {
@@ -42,4 +42,4 @@ async function sendMail(email) {
   }
 }
 
-sendMail("nirimonpc@gmail.com");
+sendMail("nurulislamrimon@gmail.com");
